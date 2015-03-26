@@ -1,36 +1,40 @@
-require 'matrix'
-
 class Robot
+  Direction=Struct.new(:name,:x,:y)
+
   def initialize table
-    @direction={
-       :north => Vector[ 0,  1],
-       :east  => Vector[ 1,  0],
-       :south => Vector[-1,  0],
-       :west  => Vector[ 0, -1]
-    }
-    @table = table
+    @table = table 
   end
 
   def place x, y, direction
-    @location = @table[Vector[x.to_i, y.to_i]] || nil
-    @direction = @direction.to_a.rotate(
-        @direction.keys.index(direction.to_sym)
-      ).to_h if @location && @direction.keys.index(direction.to_sym)
+    compass=[
+       Direction.new("north",0, 1),
+       Direction.new("east",1, 0),
+       Direction.new("south",-1,0),
+       Direction.new("west",0,-1)
+    ]
+    @x,@y = @table.contains(x.to_i, y.to_i) || nil
+    @compass = compass.rotate(compass.index{|d| d.name==direction}) || nil if 
+                                    compass.index{|d| d.name==direction} && @x && @y
+    return @x,@y,@compass
   end
 
   def move
-    @location = @table[@location+@direction.values.first] || @location if @location
+    @x, @y = @table.contains(@x+@compass.first.x, @y+@compass.first.y) || [@x, @y] if placed
   end
 
   def left
-    @direction = @direction.to_a.rotate(-1).to_h if @location
+    @compass = @compass.rotate(-1) if placed
   end
 
   def right
-    @direction = @direction.to_a.rotate.to_h if @location
+    @compass = @compass.rotate if placed
   end
 
   def report
-    puts "#{@location.to_a.join(",")},#{@direction.keys.first.upcase}" if @location
+    puts "#{@x},#{@y},#{@compass.first.name.upcase}" if placed
+  end
+
+  private def placed
+    @x && @y && @compass
   end
 end
