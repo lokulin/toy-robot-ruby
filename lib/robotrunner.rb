@@ -13,7 +13,7 @@ class RobotRunner
   end
 
   def input_is_valid? line
-    /\A[A-Z]+( \d+,\d+,(NORTH|EAST|SOUTH|WEST)){0,1}\n\z/ === line
+    /(\A[A-Z]+\n\z)|(\APLACE \d+,\d+,(NORTH|EAST|SOUTH|WEST)\n\z)/ === line
   end
 
   def send_cmd cmd,args

@@ -53,6 +53,12 @@ describe RobotRunner do
       end
     end
 
+    context 'when command has unexpected arguments' do
+      it "is invalid" do
+        expect(robotrunner.input_is_valid? "MOVE 0,0,NORTH\n").to eq(false)
+      end
+    end
+
     context 'when command is well formed' do
       it "is valid" do 
         expect(robotrunner.input_is_valid? "PLACE 0,0,NORTH\n").to eq(true)
