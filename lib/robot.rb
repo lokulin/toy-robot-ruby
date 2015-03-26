@@ -1,32 +1,36 @@
 require 'matrix'
 
 class Robot
-  DIRECTIONS={
-    "north" => Matrix[[ 0,  1],[-1,  0]],
-    "east"  => Matrix[[ 1,  0],[ 0, -1]],
-    "south" => Matrix[[ 0, -1],[ 1,  0]],
-    "west"  => Matrix[[-1,  0],[ 0,  1]]
-  }
+  def initialize table
+    @direction={
+       :north => Vector[ 0,  1],
+       :east  => Vector[ 1,  0],
+       :south => Vector[-1,  0],
+       :west  => Vector[ 0, -1]
+    }
+    @table = table
+  end
 
-  def initialize location, direction, bound
-    @location=location
-    @direction=DIRECTIONS[direction]
-    @bound=bound
+  def place x, y, direction
+    @location = @table[Vector[x.to_i, y.to_i]] || nil
+    @direction = @direction.to_a.rotate(
+        @direction.keys.index(direction.to_sym)
+      ).to_h if @location && @direction.keys.index(direction.to_sym)
   end
 
   def move
-    @location = @bound.call(@location+@direction.row(0)) || @location
+    @location = @table[@location+@direction.values.first] || @location if @location
   end
 
   def left
-    @direction=Matrix.rows(@direction.to_a.reverse).transpose
+    @direction = @direction.to_a.rotate(-1).to_h if @location
   end
 
   def right
-    @direction=Matrix.rows(@direction.transpose.to_a.reverse)
+    @direction = @direction.to_a.rotate.to_h if @location
   end
 
   def report
-    puts "#{@location.to_a.join(",")},#{DIRECTIONS.key(@direction).upcase}"
+    puts "#{@location.to_a.join(",")},#{@direction.keys.first.upcase}" if @location
   end
 end
