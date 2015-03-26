@@ -2,5 +2,9 @@ require_relative 'lib/robotrunner'
 
 abort("usage: ruby toyrobot.rb <input.txt>\n") unless ARGV.length == 1
 
-robotrunner=RobotRunner.new ARGV[0]
-robotrunner.run
+begin
+  robotrunner=RobotRunner.new
+  robotrunner.run ARGV[0]
+rescue IOError
+  abort("File does not exist.")
+end

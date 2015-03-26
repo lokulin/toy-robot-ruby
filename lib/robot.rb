@@ -1,32 +1,40 @@
-require 'matrix'
-
 class Robot
-  DIRECTIONS={
-    "north" => Matrix[[ 0,  1],[-1,  0]],
-    "east"  => Matrix[[ 1,  0],[ 0, -1]],
-    "south" => Matrix[[ 0, -1],[ 1,  0]],
-    "west"  => Matrix[[-1,  0],[ 0,  1]]
-  }
+  Direction=Struct.new(:name,:x,:y)
 
-  def initialize location, direction, bound
-    @location=location
-    @direction=DIRECTIONS[direction]
-    @bound=bound
+  def initialize table
+    @table = table 
+  end
+
+  def place x, y, direction
+    compass=[
+       Direction.new("north",0, 1),
+       Direction.new("east",1, 0),
+       Direction.new("south",-1,0),
+       Direction.new("west",0,-1)
+    ]
+    @x,@y = @table.contains(x.to_i, y.to_i) || nil
+    @compass = compass.rotate(compass.index{|d| d.name==direction}) || nil if 
+                                    compass.index{|d| d.name==direction} && @x && @y
+    return @x,@y,@compass
   end
 
   def move
-    @location = @bound.call(@location+@direction.row(0)) || @location
+    @x, @y = @table.contains(@x+@compass.first.x, @y+@compass.first.y) || [@x, @y] if placed
   end
 
   def left
-    @direction=Matrix.rows(@direction.to_a.reverse).transpose
+    @compass = @compass.rotate(-1) if placed
   end
 
   def right
-    @direction=Matrix.rows(@direction.transpose.to_a.reverse)
+    @compass = @compass.rotate if placed
   end
 
   def report
-    puts "#{@location.to_a.join(",")},#{DIRECTIONS.key(@direction).upcase}"
+    puts "#{@x},#{@y},#{@compass.first.name.upcase}" if placed
+  end
+
+  private def placed
+    @x && @y && @compass
   end
 end
