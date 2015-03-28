@@ -1,7 +1,7 @@
 Toy Robot
 =========
 
-Toy Robot is a minimalistic toy robot implementation conforming to the specifications from the [problem description](PROBLEM.md).
+Toy Robot is a minimalistic toy robot ruby implementation conforming to the specifications from the [problem description](PROBLEM.md).
 
 Testing
 -------
@@ -21,5 +21,5 @@ Running
 To run the toy robot against an input file:
 
 ```
-ruby toyrobot.rb example1.txt
+ruby toyrobot.rb examples/example1.txt
 ```
