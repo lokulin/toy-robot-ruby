@@ -1,90 +1,115 @@
 require_relative '../lib/robot'
+require_relative '../lib/table'
 require 'matrix'
 
 describe Robot do
-  bounded = lambda { |a| false } 
-  unbounded = lambda { |a| a }
-  
-  describe '#move' do
-    context 'when unbounded' do
-      let(:robot) { Robot.new 0,0,"north",unbounded }
-      it "moves" do 
-        expect(robot.move).to eq(Vector[0,1])
+  let(:robot) { Robot.new(Table.new(0,0,4,4)) }
+
+  describe '#place' do
+    context 'on the table' do
+      it "is placed" do
+        expect(robot.place(0,0,'east')[0]).to eq(0)
+        expect(robot.place(0,0,'east')[1]).to eq(0)
+        expect(robot.place(0,0,'east')[2].first.name).to eq('east')
+      end
+    end
+    
+    context 'outside the table' do
+      it "is not placed" do
+        expect(robot.place(-1,0,'east')[0]).to eq(nil)
+        expect(robot.place(0,-1,'east')[0]).to eq(nil)
+        expect(robot.place(5,0,'east')[0]).to eq(nil)
+        expect(robot.place(0,5,'east')[0]).to eq(nil)
       end
     end
 
-    context 'when bounded' do
-    let(:robot) { Robot.new 0,0,"north",bounded}
+    context 'using an invalid direction' do
+      it "is not placed" do
+        expect(robot.place(0,0,'up')[2]).to eq(nil)
+      end
+    end
+  end
+  
+  describe '#move' do
+    context 'a valid table location' do
+      before { robot.place(0,0,'north') }
+      it "moves" do 
+        expect(robot.move).to eq([0,1])
+      end
+    end
+
+    context 'outside the table' do
+      before { robot.place(0,0,'south') }
       it "doesn't move" do 
-        expect(robot.move).to eq(Vector[0,0])
+        expect(robot.move).to eq([0,0])
       end
     end
   end
 
   describe '#left' do
-    context 'when facing north' do
-      let(:robot) { Robot.new 0,0,"north",unbounded }
-      it "turns to west" do
-        expect(robot.left.keys.first).to eq(:west)
+    context 'facing north' do
+      before { robot.place(0,0,'north') }
+      it "turns west" do
+        expect(robot.left.first.name).to eq('west')
       end
     end
 
-    context 'when facing west' do
-      let(:robot) { Robot.new 0,0,"west",unbounded }
-      it "turns to south" do
-        expect(robot.left.keys.first).to eq(:south)
+    context 'facing west' do
+      before { robot.place(0,0,'west') }
+      it "turns south" do
+        expect(robot.left.first.name).to eq('south')
       end
     end
 
-    context 'when facing south' do
-      let(:robot) { Robot.new 0,0,"south",unbounded }
-      it "turns to east" do
-        expect(robot.left.keys.first).to eq(:east)
+    context 'facing south' do
+      before { robot.place(0,0,'south') }
+      it "turns east" do
+        expect(robot.left.first.name).to eq('east')
       end
     end
 
-    context 'when facing east' do
-      let(:robot) { Robot.new 0,0,"east",unbounded }
-      it "turns to north" do
-        expect(robot.left.keys.first).to eq(:north)
+    context 'facing east' do
+      before { robot.place(0,0,'east') }
+      it "turns north" do
+        expect(robot.left.first.name).to eq('north')
       end
     end
   end
 
   describe '#right' do
-    context 'when facing north' do
-      let(:robot) { Robot.new 0,0,"north",unbounded }
-      it "turns to east" do
-        expect(robot.right.keys.first).to eq(:east)
+    context 'facing north' do
+      before { robot.place(0,0,'north') }
+      it "turns east" do
+        expect(robot.right.first.name).to eq('east')
       end
     end
 
-    context 'when facing west' do
-      let(:robot) { Robot.new 0,0,"west",unbounded }
-      it "turns to north" do
-        expect(robot.right.keys.first).to eq(:north)
+    context 'facing west' do
+      before { robot.place(0,0,'west') }
+      it "turns north" do
+        expect(robot.right.first.name).to eq('north')
       end
     end
 
-    context 'when facing south' do
-      let(:robot) { Robot.new 0,0,"south",unbounded }
-      it "turns to west" do
-        expect(robot.right.keys.first).to eq(:west)
+    context 'facing south' do
+      before { robot.place(0,0,'south') }
+      it "turns west" do
+        expect(robot.right.first.name).to eq('west')
       end
     end
 
-    context 'when facing east' do
-      let(:robot) { Robot.new 0,0,"east",unbounded }
-      it "turns to south" do
-        expect(robot.right.keys.first).to eq(:south)
+    context 'facing east' do
+      before { robot.place(0,0,'east') }
+      it "turns south" do
+        expect(robot.right.first.name).to eq('south')
       end
     end
   end
 
   describe '#report' do
-    let(:robot) { Robot.new 0,0,"east",unbounded }
+    before { robot.place(0,0,'north') }
     it "prints the location and direction" do
-      expect(STDOUT).to receive(:puts).with('0,0,EAST')
+      expect(STDOUT).to receive(:puts).with('0,0,NORTH')
       robot.report
     end
   end

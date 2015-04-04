@@ -19,15 +19,15 @@ class Robot
   end
 
   def move
-    @x, @y = @table.contains(@x+@compass.first.x, @y+@compass.first.y) || [@x, @y] if placed
+    @x, @y = @table.contains(@x+@compass.first.x, @y+@compass.first.y) || [@x, @y]
   end
 
   def left
-    @compass = @compass.rotate(-1) if placed
+    @compass = @compass.rotate(-1)
   end
 
   def right
-    @compass = @compass.rotate if placed
+    @compass = @compass.rotate
   end
 
   def report
