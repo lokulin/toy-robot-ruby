@@ -31,10 +31,10 @@ class Robot
   end
 
   def report
-    puts "#{@x},#{@y},#{@compass.first.name.upcase}" if placed
+    puts "#{@x},#{@y},#{@compass.first.name.upcase}" if placed?
   end
 
-  private def placed
+  private def placed?
     @x && @y && @compass
   end
 end
