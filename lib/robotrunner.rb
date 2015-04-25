@@ -6,11 +6,11 @@ class RobotRunner
     return args[0].to_f, args[1].to_f, @dirs.index(args[2]).to_f*0.5, Table.new(0,0,4,4)
   end
 
-  def run file
+  def run
     @dirs = %w{NORTH EAST SOUTH WEST}
     robot = Robot.new(0,0,0,nil,@dirs)
 
-    IO.foreach file do |line|
+    ARGF.each do |line|
       match = %r"(?<=^)(MOVE$|LEFT$|RIGHT$|REPORT$|PLACE(?=\s?(\d+),(\d+),(NORTH|EAST|SOUTH|WEST)$))".match(line)
       cmd, *args = match.captures unless match.nil?
       case cmd
