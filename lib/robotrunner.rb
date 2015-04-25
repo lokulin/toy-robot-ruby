@@ -22,5 +22,17 @@ class RobotRunner
       end
     end
   end
+
+  def stress
+    robot.place(0.0,0.0,0.0,Table.new(0,0,4,4))
+    for i in 0..100_000_000
+      robot = robot.move
+      robot = robot.left
+      robot = robot.left
+      robot = robot.move
+      robot = robot.right
+      robot = robot.right
+    end
+  end
 end
 
