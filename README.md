@@ -1,6 +1,8 @@
 Toy Robot
 =========
 
+[![Dependency Status](https://www.versioneye.com/user/projects/5545adbc5d4f9a0b990000d2/badge.svg?style=flat)](https://www.versioneye.com/user/projects/5545adbc5d4f9a0b990000d2)
+
 Toy Robot is a minimalistic toy robot ruby implementation conforming to the specifications from the [problem description](PROBLEM.md).
 
 Testing
