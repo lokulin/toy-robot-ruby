@@ -1,24 +1,26 @@
 include Math
 
 class Robot
-  def initialize(x = 0.0, y = 0.0, facing = 0.0, table = nil, dirs = @dirs)
+  attr_reader :table
+
+  def initialize(x = 0, y = 0, facing = 0.0, table = nil, dirs = @dirs)
     @x, @y, @facing, @table, @dirs = x, y, facing, table, dirs
   end
 
   def move
-    place @x+sin(PI*@facing), @y+cos(PI*@facing), @facing, @table
+    place(*infront(), @facing, @table)
   end
 
   def left
-    place @x, @y, (@facing-0.5)%2.0, @table
+    place(@x, @y, (@facing-0.5)%2.0, @table)
   end
 
   def right
-    place @x, @y, (@facing+0.5)%2.0, @table
+    place(@x, @y, (@facing+0.5)%2.0, @table)
   end
 
   def report
-    puts "#{@x.to_i},#{@y.to_i},#{@dirs[(@facing*2.0).to_i]}" if @table.instance_of? Table
+    puts "#{@x},#{@y},#{@dirs[(@facing*2.0).to_i]}" if @table.instance_of? Table
     self
   end
 
@@ -28,6 +30,16 @@ class Robot
     else
       self
     end
+  end
+
+  def place_object
+    @table.store_object(infront()) if @table.instance_of?(Table)
+    self
+  end
+
+  private
+  def infront
+    return (@x+sin(PI*@facing)).to_i, (@y+cos(PI*@facing)).to_i
   end
 end
 

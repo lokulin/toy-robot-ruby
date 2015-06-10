@@ -2,30 +2,30 @@ require_relative 'robot'
 require_relative 'table'
 
 class RobotRunner
-  def placeargs args
-    return args[0].to_f, args[1].to_f, @dirs.index(args[2]).to_f*0.5, Table.new(0,0,4,4)
-  end
-
   def run
-    @dirs = %w{NORTH EAST SOUTH WEST}
-    robot = Robot.new(0,0,0,nil,@dirs)
+    dirs = %w{NORTH EAST SOUTH WEST}
+    robot = Robot.new(0,0,0,nil,dirs)
+    table = Table.new(0,0,4,4)
 
     ARGF.each do |line|
-      match = %r"(?<=^)(MOVE$|LEFT$|RIGHT$|REPORT$|PLACE(?=\s?(\d+),(\d+),(NORTH|EAST|SOUTH|WEST)$))".match(line)
-      cmd, *args = match.captures unless match.nil?
-      case cmd
-      when "MOVE", "LEFT", "RIGHT", "REPORT"
-        robot = robot.send cmd.downcase
-      when "PLACE"
-        *args = placeargs args
-        robot = robot.send cmd.downcase,*args
+      if line =~ /(?<=^)([A-Z_]+$
+                         |PLACE(?=\s?(\d+),(\d+),(#{dirs*"|"})$))/x
+        case $1
+        when "MOVE", "LEFT", "RIGHT", "REPORT", "PLACE_OBJECT"
+          robot = robot.send($1.downcase)
+        when "PLACE"
+          robot = robot.send($1.downcase,$2.to_i,$3.to_i,dirs.index($4)/2.0,table)
+        when "MAP"
+          robot.table.map().reverse.each{ |r| r.each{ |c| print c }; puts}
+          puts
+        end
       end
     end
   end
 
   def stress
-    robot.place(0.0,0.0,0.0,Table.new(0,0,4,4))
-    for i in 0..100_000_000
+    robot.place(0,0,0.0,Table.new(0,0,4,4))
+    (0..100_000_000).each do
       robot = robot.move
       robot = robot.left
       robot = robot.left
