@@ -16,7 +16,7 @@ class RobotRunner
         when "PLACE"
           robot = robot.send($1.downcase,$2.to_i,$3.to_i,dirs.index($4)/2.0,table)
         when "MAP"
-          robot.table.map().reverse.each{ |r| r.each{ |c| print c }; puts}
+          robot.table.map().reverse_each{ |r| r.each{ |c| print c }; puts}
           puts
         end
       end
