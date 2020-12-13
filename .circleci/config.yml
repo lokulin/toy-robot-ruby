@@ -11,4 +11,4 @@ jobs:
       - checkout
       - run:
           name: Test
-          command: bundle && bundle exec rspec -f d
+          command: bundle -v
