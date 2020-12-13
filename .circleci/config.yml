@@ -14,6 +14,12 @@ jobs:
           command: |
             gem install bundler:2.1.4
             bundle install
-      - test:
+  test:
+    docker:
+      - image: circleci/ruby:2.7.2
+    executor: ruby/default
+    steps:
+      - checkout
+      - run:
           name: Tests
           command: bundle exec rspec -f d 
