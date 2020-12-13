@@ -29,11 +29,11 @@ describe Robot do
       robotrunner.run
     end
 
-    it "Example 5 prints 3,4,NORTH" do
-      expect(STDOUT).to receive(:puts).with('3,4,NORTH')
-      ARGV[0] = "example/example5.txt"
-      robotrunner.run
-    end
+    #it "Example 5 prints 3,4,NORTH" do
+    #  expect(STDOUT).to receive(:puts).with('3,4,NORTH')
+    #  ARGV[0] = "example/example5.txt"
+    #  robotrunner.run
+    #end
  end
 
 end
