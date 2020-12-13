@@ -9,17 +9,24 @@ jobs:
     executor: ruby/default
     steps:
       - checkout
-      - run:
-          name: Intall Bundler
-          command: |
-            gem install bundler:2.1.4
-            bundle install
+      - ruby/install-deps
+
   test:
     docker:
       - image: circleci/ruby:2.7.2
     executor: ruby/default
     steps:
       - checkout
+      - ruby/install-deps
       - run:
           name: Tests
           command: bundle exec rspec -f d 
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build_and_test
+      - test:
+          requires:
+            - build
