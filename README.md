@@ -25,3 +25,5 @@ To run the toy robot against an input file:
 ```
 ruby toyrobot.rb examples/example1.txt
 ```
+
+A small change
